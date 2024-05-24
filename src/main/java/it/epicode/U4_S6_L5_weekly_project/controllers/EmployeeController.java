@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -98,6 +101,19 @@ public class EmployeeController {
         employeeService.deleteEmployee(id);
         ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return responseEntity;
+    }
+
+    // Avatar upload
+
+    @PostMapping("/{employeeId}/avatar")
+    public ResponseEntity<String> uploadAvatar(@PathVariable long employeeId, @RequestParam("file") MultipartFile file) {
+        try {
+            String imageUrl = employeeService.uploadAvatar(employeeId, file);
+            return ResponseEntity.ok(imageUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }

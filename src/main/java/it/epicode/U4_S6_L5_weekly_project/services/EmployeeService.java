@@ -1,5 +1,7 @@
 package it.epicode.U4_S6_L5_weekly_project.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import it.epicode.U4_S6_L5_weekly_project.entities.Employee;
 import it.epicode.U4_S6_L5_weekly_project.exceptions.NotFoundException;
 import it.epicode.U4_S6_L5_weekly_project.records.EmployeePayloadDto;
@@ -10,12 +12,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Map;
 
 @Service
 public class EmployeeService {
 
     @Autowired
     EmployeeRepository employeeRepository;
+
+    @Autowired
+    Cloudinary cloudinary;
 
     // GET all
 
@@ -69,5 +78,16 @@ public class EmployeeService {
 
     public void deleteEmployee(long id) {
         employeeRepository.deleteById(id);
+    }
+
+    // Avatar upload
+
+    public String uploadAvatar(long employeeId, MultipartFile file) throws IOException {
+
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+
+        String imageUrl = (String) uploadResult.get("url");
+
+        return imageUrl;
     }
 }
