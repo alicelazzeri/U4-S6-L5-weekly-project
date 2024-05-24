@@ -5,6 +5,7 @@ import it.epicode.U4_S6_L5_weekly_project.entities.Employee;
 import it.epicode.U4_S6_L5_weekly_project.exceptions.BadRequestException;
 import it.epicode.U4_S6_L5_weekly_project.exceptions.NoContentException;
 import it.epicode.U4_S6_L5_weekly_project.exceptions.NotFoundException;
+import it.epicode.U4_S6_L5_weekly_project.records.AssignedDeviceToEmployeePayloadDto;
 import it.epicode.U4_S6_L5_weekly_project.records.DevicePayloadDto;
 import it.epicode.U4_S6_L5_weekly_project.services.DeviceService;
 import it.epicode.U4_S6_L5_weekly_project.services.EmployeeService;
@@ -110,6 +111,35 @@ public class DeviceController {
     public ResponseEntity<Void> deleteDevice(@PathVariable long id) {
         deviceService.deleteDevice(id);
         ResponseEntity<Void> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return responseEntity;
+    }
+
+    // Custom API to assign device to employee (http://localhost:8080/api/assign?deviceId={deviceId}&employeeId={employeeId})
+
+    @PostMapping("/assign")
+    public ResponseEntity<AssignedDeviceToEmployeePayloadDto> assignDeviceToEmployee(@RequestParam long deviceId, @RequestParam long employeeId) {
+        Employee employee = employeeService.getEmployeeById(employeeId);
+        if (employee == null) {
+            throw new NotFoundException(employeeId);
+        }
+
+        Device deviceToBeAssigned = deviceService.assignDeviceToEmployee(deviceId, employee);
+        if (deviceToBeAssigned == null) {
+            throw new NotFoundException(deviceId);
+        }
+
+        AssignedDeviceToEmployeePayloadDto payload = new AssignedDeviceToEmployeePayloadDto(
+                deviceToBeAssigned.getId(),
+                deviceToBeAssigned.getDeviceType(),
+                deviceToBeAssigned.getDeviceStatus(),
+                employee.getId(),
+                employee.getUsername(),
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getEmail(),
+                employee.getAvatar());
+
+        ResponseEntity<AssignedDeviceToEmployeePayloadDto> responseEntity = new ResponseEntity<>(payload, HttpStatus.CREATED);
         return responseEntity;
     }
 }

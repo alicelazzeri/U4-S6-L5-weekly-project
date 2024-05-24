@@ -2,6 +2,7 @@ package it.epicode.U4_S6_L5_weekly_project.services;
 
 import it.epicode.U4_S6_L5_weekly_project.entities.Device;
 import it.epicode.U4_S6_L5_weekly_project.entities.Employee;
+import it.epicode.U4_S6_L5_weekly_project.entities.enums.DeviceStatus;
 import it.epicode.U4_S6_L5_weekly_project.exceptions.NotFoundException;
 import it.epicode.U4_S6_L5_weekly_project.records.DevicePayloadDto;
 import it.epicode.U4_S6_L5_weekly_project.repositories.DeviceRepository;
@@ -25,7 +26,7 @@ public class DeviceService {
     // GET all
 
     public Page<Device> getAllDevices(int page, int size, String sortBy) {
-        if(size < 0) {
+        if (size < 0) {
             size = 10;
         }
         if (size > 100) {
@@ -38,7 +39,7 @@ public class DeviceService {
     // GET id
 
     public Device getDeviceById(long id) {
-        return deviceRepository.findById(id).orElseThrow(()-> new NotFoundException(id));
+        return deviceRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
     // POST
@@ -67,7 +68,14 @@ public class DeviceService {
         deviceRepository.deleteById(id);
     }
 
+    public Device assignDeviceToEmployee(long deviceId, Employee employee) {
+        Device deviceToBeAssigned = getDeviceById(deviceId);
+        deviceToBeAssigned.setEmployee(employee);
+        deviceToBeAssigned.setDeviceStatus(DeviceStatus.ASSIGNED);
+        deviceRepository.save(deviceToBeAssigned);
+        return deviceToBeAssigned;
     }
+}
 
 
 
