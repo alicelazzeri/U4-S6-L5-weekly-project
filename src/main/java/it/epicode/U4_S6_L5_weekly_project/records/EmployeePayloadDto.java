@@ -18,5 +18,4 @@ public record EmployeePayloadDto(
         @Email(message = "Employee email must be a valid email address.")
         String email,
         String avatar
-) {
-}
+) {}

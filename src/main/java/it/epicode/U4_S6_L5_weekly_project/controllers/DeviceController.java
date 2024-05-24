@@ -85,7 +85,11 @@ public class DeviceController {
     // PUT (http://localhost:8080/api/devices/{id}) + payload
 
     @PutMapping("/{id}")
-    public ResponseEntity<Device> updateDevice(@PathVariable long id, @RequestBody @Validated DevicePayloadDto updatedDevicePayload) {
+    public ResponseEntity<Device> updateDevice(@PathVariable long id, @RequestBody @Validated DevicePayloadDto updatedDevicePayload, BindingResult validation) {
+        if (validation.hasErrors()) {
+            throw new BadRequestException(validation.getAllErrors());
+        }
+
         Device deviceToBeUpdated = deviceService.getDeviceById(id);
         if (deviceToBeUpdated == null) {
             throw new NotFoundException(id);

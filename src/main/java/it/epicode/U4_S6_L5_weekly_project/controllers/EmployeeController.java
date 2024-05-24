@@ -78,7 +78,11 @@ public class EmployeeController {
     // PUT (http://localhost:8080/api/employees/{id}) + payload
 
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable long id, @RequestBody @Validated EmployeePayloadDto updatedEmployeePayload) {
+    public ResponseEntity<Employee> updateEmployee(@PathVariable long id, @RequestBody @Validated EmployeePayloadDto updatedEmployeePayload,BindingResult validation) {
+        if (validation.hasErrors()) {
+            throw new BadRequestException(validation.getAllErrors());
+        }
+
         Employee employeeToBeUpdated = employeeService.getEmployeeById(id);
         if ( employeeToBeUpdated == null) {
             throw new NotFoundException(id);
@@ -105,15 +109,15 @@ public class EmployeeController {
 
     // Avatar upload
 
-    @PostMapping("/{employeeId}/avatar")
-    public ResponseEntity<String> uploadAvatar(@PathVariable long employeeId, @RequestParam("file") MultipartFile file) {
+    @PatchMapping("/{employeeId}/avatar")
+    public String uploadAvatar(@PathVariable long employeeId, @RequestParam("file") MultipartFile file) {
         try {
-            String imageUrl = employeeService.uploadAvatar(employeeId, file);
-            return ResponseEntity.ok(imageUrl);
+           return employeeService.uploadAvatar(employeeId, file);
         } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new RuntimeException(e);
         }
     }
+
+
 
 }

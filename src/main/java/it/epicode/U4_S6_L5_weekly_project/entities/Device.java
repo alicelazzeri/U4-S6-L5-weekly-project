@@ -27,6 +27,6 @@ public class Device {
     private DeviceStatus deviceStatus;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employeeId")
     private Employee employee;
 }
