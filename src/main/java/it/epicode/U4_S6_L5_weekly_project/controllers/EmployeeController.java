@@ -4,7 +4,7 @@ import it.epicode.U4_S6_L5_weekly_project.entities.Employee;
 import it.epicode.U4_S6_L5_weekly_project.exceptions.BadRequestException;
 import it.epicode.U4_S6_L5_weekly_project.exceptions.NoContentException;
 import it.epicode.U4_S6_L5_weekly_project.exceptions.NotFoundException;
-import it.epicode.U4_S6_L5_weekly_project.records.EmployeePayloadDto;
+import it.epicode.U4_S6_L5_weekly_project.payloads.EmployeePayload;
 import it.epicode.U4_S6_L5_weekly_project.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -57,7 +57,7 @@ public class EmployeeController {
     // POST (http://localhost:8080/api/employees) + payload
 
     @PostMapping
-    public ResponseEntity<Employee> saveEmployee(@RequestBody @Validated EmployeePayloadDto employeePayload, BindingResult validation) {
+    public ResponseEntity<Employee> saveEmployee(@RequestBody @Validated EmployeePayload employeePayload, BindingResult validation) {
         if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors());
         } else {
@@ -78,7 +78,7 @@ public class EmployeeController {
     // PUT (http://localhost:8080/api/employees/{id}) + payload
 
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable long id, @RequestBody @Validated EmployeePayloadDto updatedEmployeePayload,BindingResult validation) {
+    public ResponseEntity<Employee> updateEmployee(@PathVariable long id, @RequestBody @Validated EmployeePayload updatedEmployeePayload, BindingResult validation) {
         if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors());
         }

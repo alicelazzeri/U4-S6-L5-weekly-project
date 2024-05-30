@@ -1,10 +1,10 @@
-package it.epicode.U4_S6_L5_weekly_project.records;
+package it.epicode.U4_S6_L5_weekly_project.payloads;
 
 import it.epicode.U4_S6_L5_weekly_project.entities.enums.DeviceStatus;
 import it.epicode.U4_S6_L5_weekly_project.entities.enums.DeviceType;
 import jakarta.validation.constraints.NotNull;
 
-public record DevicePayloadDto(
+public record DevicePayload(
         @NotNull(message = "Device type is mandatory.")
         DeviceType deviceType,
         @NotNull(message = "Device status is mandatory.")

@@ -5,8 +5,8 @@ import it.epicode.U4_S6_L5_weekly_project.entities.Employee;
 import it.epicode.U4_S6_L5_weekly_project.exceptions.BadRequestException;
 import it.epicode.U4_S6_L5_weekly_project.exceptions.NoContentException;
 import it.epicode.U4_S6_L5_weekly_project.exceptions.NotFoundException;
-import it.epicode.U4_S6_L5_weekly_project.records.AssignedDeviceToEmployeePayloadDto;
-import it.epicode.U4_S6_L5_weekly_project.records.DevicePayloadDto;
+import it.epicode.U4_S6_L5_weekly_project.payloads.DevicePayload;
+import it.epicode.U4_S6_L5_weekly_project.payloads.AssignedDeviceToEmployeePayload;
 import it.epicode.U4_S6_L5_weekly_project.services.DeviceService;
 import it.epicode.U4_S6_L5_weekly_project.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class DeviceController {
     // POST (http://localhost:8080/api/devices) + payload
 
     @PostMapping
-    public ResponseEntity<Device> saveDevice(@RequestBody @Validated DevicePayloadDto devicePayload, BindingResult validation) {
+    public ResponseEntity<Device> saveDevice(@RequestBody @Validated DevicePayload devicePayload, BindingResult validation) {
         if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors());
         } else {
@@ -85,7 +85,7 @@ public class DeviceController {
     // PUT (http://localhost:8080/api/devices/{id}) + payload
 
     @PutMapping("/{id}")
-    public ResponseEntity<Device> updateDevice(@PathVariable long id, @RequestBody @Validated DevicePayloadDto updatedDevicePayload, BindingResult validation) {
+    public ResponseEntity<Device> updateDevice(@PathVariable long id, @RequestBody @Validated DevicePayload updatedDevicePayload, BindingResult validation) {
         if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors());
         }
@@ -121,7 +121,7 @@ public class DeviceController {
     // Custom API to assign device to employee (http://localhost:8080/api/assign?deviceId={deviceId}&employeeId={employeeId})
 
     @PostMapping("/assign")
-    public ResponseEntity<AssignedDeviceToEmployeePayloadDto> assignDeviceToEmployee(@RequestParam long deviceId, @RequestParam long employeeId) {
+    public ResponseEntity<AssignedDeviceToEmployeePayload> assignDeviceToEmployee(@RequestParam long deviceId, @RequestParam long employeeId) {
         Employee employee = employeeService.getEmployeeById(employeeId);
         if (employee == null) {
             throw new NotFoundException(employeeId);
@@ -132,7 +132,7 @@ public class DeviceController {
             throw new NotFoundException(deviceId);
         }
 
-        AssignedDeviceToEmployeePayloadDto payload = new AssignedDeviceToEmployeePayloadDto(
+        AssignedDeviceToEmployeePayload payload = new AssignedDeviceToEmployeePayload(
                 deviceToBeAssigned.getId(),
                 deviceToBeAssigned.getDeviceType(),
                 deviceToBeAssigned.getDeviceStatus(),
@@ -143,7 +143,7 @@ public class DeviceController {
                 employee.getEmail(),
                 employee.getAvatar());
 
-        ResponseEntity<AssignedDeviceToEmployeePayloadDto> responseEntity = new ResponseEntity<>(payload, HttpStatus.CREATED);
+        ResponseEntity<AssignedDeviceToEmployeePayload> responseEntity = new ResponseEntity<>(payload, HttpStatus.CREATED);
         return responseEntity;
     }
 }

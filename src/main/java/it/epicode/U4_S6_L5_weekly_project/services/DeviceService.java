@@ -1,10 +1,10 @@
 package it.epicode.U4_S6_L5_weekly_project.services;
 
+import it.epicode.U4_S6_L5_weekly_project.exceptions.NotFoundException;
+import it.epicode.U4_S6_L5_weekly_project.payloads.DevicePayload;
 import it.epicode.U4_S6_L5_weekly_project.entities.Device;
 import it.epicode.U4_S6_L5_weekly_project.entities.Employee;
 import it.epicode.U4_S6_L5_weekly_project.entities.enums.DeviceStatus;
-import it.epicode.U4_S6_L5_weekly_project.exceptions.NotFoundException;
-import it.epicode.U4_S6_L5_weekly_project.records.DevicePayloadDto;
 import it.epicode.U4_S6_L5_weekly_project.repositories.DeviceRepository;
 import it.epicode.U4_S6_L5_weekly_project.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ public class DeviceService {
 
     // PUT
 
-    public Device updateDevice(long id, DevicePayloadDto updatedDevice) {
+    public Device updateDevice(long id, DevicePayload updatedDevice) {
         Device deviceToBeUpdated = deviceRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
         deviceToBeUpdated.setDeviceType(updatedDevice.deviceType());
         deviceToBeUpdated.setDeviceStatus(updatedDevice.deviceStatus());

@@ -30,6 +30,8 @@ public class Employee {
     @Column
     private String email;
     @Column
+    private String password;
+    @Column
     private String avatar;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.REMOVE)

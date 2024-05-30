@@ -2,9 +2,9 @@ package it.epicode.U4_S6_L5_weekly_project.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import it.epicode.U4_S6_L5_weekly_project.entities.Employee;
 import it.epicode.U4_S6_L5_weekly_project.exceptions.NotFoundException;
-import it.epicode.U4_S6_L5_weekly_project.records.EmployeePayloadDto;
+import it.epicode.U4_S6_L5_weekly_project.payloads.EmployeePayload;
+import it.epicode.U4_S6_L5_weekly_project.entities.Employee;
 import it.epicode.U4_S6_L5_weekly_project.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -60,7 +60,7 @@ public class EmployeeService {
 
     // PUT
 
-    public Employee updateEmployee(long id, EmployeePayloadDto updatedEmployee) {
+    public Employee updateEmployee(long id, EmployeePayload updatedEmployee) {
         Employee employeeToBeUpdated = employeeRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
         employeeToBeUpdated.setUsername(updatedEmployee.username());
         employeeToBeUpdated.setFirstName(updatedEmployee.firstName());
